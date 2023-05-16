@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-// Check a commit
-
 void main() {
   runApp(const MyApp());
 }
@@ -33,11 +31,27 @@ class HomePage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final datetime = useStream(getTime());
-
+    final controller = useTextEditingController();
+    final text = useState('');
+    useEffect(() {
+      print('useEffect called');
+      controller.addListener(() {
+        print('controller changed');
+        text.value = controller.text;
+      });
+      return null;
+    }, [controller]);
     return Scaffold(
       appBar: AppBar(
-        title: Text(datetime.data ?? 'datetime.data is null'),
+        title: const Text('Home Page'),
+      ),
+      body: Column(
+        children: [
+          TextField(
+            controller: controller,
+          ),
+          Text('You typed ${text.value}'),
+        ],
       ),
     );
   }
